@@ -1,0 +1,36 @@
+<form [formGroup]="cmForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="products">
+    <div *ngFor="let product of controls.products.controls; let i = index">
+      <h3>Product {{ i + 1 }} :</h3>
+      <button *ngIf="i > 0" type="button" (click)="removeProduct(i)">
+        - Remove product
+      </button>
+      <order-product-form [productControl]="product"></order-product-form>
+    </div>
+  </div>
+  <button type="button" (click)="addProduct()">+ Add Product</button>
+
+  <button
+    *ngIf="(addDetails$ | async) === false"
+    type="button"
+    (click)="addDetails$.next(true)"
+  >
+    Add details
+  </button>
+  <div *ngIf="addDetails$ | async">
+    <button type="button" (click)="addDetails$.next(false)">
+      Remove details
+    </button>
+    <order-details-form
+      [detailsControl]="controls.orderDetails"
+    ></order-details-form>
+  </div>
+
+  <br />
+  <p>Complete the form to enable button.</p>
+  <button type="submit" [disabled]="!cmForm.valid">Submit</button>
+</form>
+
+<div *ngIf="result$ | async" class="result">
+  <pre>{{ resultJson$ | async }}</pre>
+</div>
